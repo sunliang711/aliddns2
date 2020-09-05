@@ -39,8 +39,10 @@ func UpdateRecord(c *gin.Context) {
 	err = recordOperator.DoUpdate(req.NewIP, req.RR, req.Domain, req.Type, req.TTL)
 
 	if err != nil {
+		logrus.Info(err)
 		c.JSON(1, gin.H{"message": err})
 	} else {
+		logrus.Info("OK")
 		c.JSON(0, gin.H{"message": "OK"})
 	}
 }
