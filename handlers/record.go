@@ -25,13 +25,13 @@ func UpdateRecord(c *gin.Context) {
 	err := c.BindJSON(&req)
 	if err != nil {
 		logrus.Errorf("bad request,not json?")
-		c.JSON(1, "bad request")
+		c.JSON(200, gin.H{"message": "bad request,invalid json"})
 		return
 	}
 
 	if req.NewIP == "" || req.RR == "" || req.Domain == "" || req.Type == "" || req.AccessKey == "" || req.AccessSecret == "" {
 		logrus.Warnf("some request field is empty")
-		c.JSON(1, gin.H{"message": types.ErrReqFieldEmpty})
+		c.JSON(200, gin.H{"message": types.ErrReqFieldEmpty, "format": "need new_ip,rr,domain,type,ttl,access_key,access_secret"})
 		return
 	}
 	regionID := viper.GetString("server.regionID")
@@ -40,9 +40,9 @@ func UpdateRecord(c *gin.Context) {
 
 	if err != nil {
 		logrus.Info(err)
-		c.JSON(1, gin.H{"message": err})
+		c.JSON(200, gin.H{"message": err})
 	} else {
 		logrus.Info("OK")
-		c.JSON(0, gin.H{"message": "OK"})
+		c.JSON(200, gin.H{"message": "OK"})
 	}
 }
