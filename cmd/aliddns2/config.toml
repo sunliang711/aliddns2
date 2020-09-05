@@ -1,6 +1,41 @@
 [server]
 port=8080
 
+###下面三个参数暂时不要修改
+regionID="cn-hangzhou"
+pageNumber="1"
+pageSize="100"
+
+[local]
+enable=true
+updateInterval=60
+
+RR=""
+DomainName=""
+Type=""
+TTL=""
+
+accessKey=""
+accessSecret=""
+
+##获取最新WAN口ip命令,为空时,启用下面四个参数来获取ip
+newIPCommand="curl -s whatismyip.akamai.com"
+
+##当new_ip_command为空时,使用下面四个参数来获取ip
+###调用http GET方法从new_ip_source获取输出
+##不要忘记前面的http或者http
+newIPSource="http://myip.ipip.net"
+
+###把GET方法获取的输出用下面的正则匹
+filterIPRegex="([0-9]+\\.){3}[0-9]+"
+
+###master_index和slave_index是作为regexp.FindAllStringSubmatch返回的[][]string的两个下标
+
+###从匹配到正则中选取第master_index个数组
+masterIndex=0
+###选取第master_index个数组中第slave_index元素作为ip
+slaveIndex=0
+
 [mysql]
 enable = false
 # <user>[:password]@tcp(address)/<Database>

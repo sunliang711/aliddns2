@@ -3,16 +3,16 @@ package main
 import (
 	"fmt"
 
-	"github.com/sunliang711/goutils/config"
-	"github.com/sunliang711/aliddns2/models"
-	"github.com/sunliang711/aliddns2/server"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"github.com/sunliang711/aliddns2/models"
+	"github.com/sunliang711/aliddns2/server"
+	"github.com/sunliang711/goutils/config"
 )
 
 func main() {
 	err := config.InitConfigLogger()
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 
