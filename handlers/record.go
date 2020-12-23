@@ -23,7 +23,7 @@ type UpdateRecordReq struct {
 // UpdateRecord 根据请求来更新主机记录，如果不存在，则会新增主机记录
 func UpdateRecord(c *gin.Context) {
 	remoteAddr := c.Request.RemoteAddr
-	logrus.Infof("Remote address: %v",remoteAddr)
+	logrus.Infof(">> Remote address: %v", remoteAddr)
 	var req UpdateRecordReq
 	err := c.BindJSON(&req)
 	if err != nil {
@@ -40,18 +40,22 @@ func UpdateRecord(c *gin.Context) {
 	regionID := viper.GetString("server.regionID")
 	recordOperator, err := recordOperation.NewOperator(regionID, req.AccessKey, req.AccessSecret, "", "")
 	if err != nil {
-		logrus.Infof("NewOperator error: %v",err)
-		c.JSON(200,gin.H{"message":fmt.Sprintf("Internal error: %v",err)})
+		logrus.Infof("NewOperator error: %v", err)
+		c.JSON(200, gin.H{"message": fmt.Sprintf("Internal error: %v", err)})
 		return
 	}
 	err = recordOperator.DoUpdate(req.NewIP, req.RR, req.Domain, req.Type, req.TTL)
 
-	if err != nil {
-		msg := fmt.Sprintf("update error: %v",err)
+	if err == types.ErrNotNeedUpdate {
+		msg := fmt.Sprintf("%v", err)
 		logrus.Info(msg)
-		c.JSON(200, gin.H{"message": msg})
+		c.JSON(200, gin.H{"code": 0, "message": msg})
+	} else if err != nil {
+		msg := fmt.Sprintf("update error: %v", err)
+		logrus.Info(msg)
+		c.JSON(200, gin.H{"code": 1, "message": msg})
 	} else {
 		logrus.Info("updated")
-		c.JSON(200, gin.H{"message": "updated"})
+		c.JSON(200, gin.H{"code": 0, "message": "updated"})
 	}
 }

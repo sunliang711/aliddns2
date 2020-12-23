@@ -63,7 +63,6 @@ func (o *Operator) DoUpdate(newIP, RR, DomainName, Type, TTL string) error {
 		logrus.Printf(">>update OK:%v", res)
 		return nil
 	} else {
-		logrus.Printf("currentDNSIP == new ip,do nothing.")
 		return types.ErrNotNeedUpdate
 	}
 }

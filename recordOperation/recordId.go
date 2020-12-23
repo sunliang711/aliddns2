@@ -35,7 +35,7 @@ type SubDomainRecordResponse struct {
 //查询子域名记录Id
 //return : id,current ip,err
 func (o *Operator) GetRecordId(subDomain string, pageSize string, pageNumber string) (string, string, error) {
-	logrus.Printf("GetRecordId(): subDomain:%v", subDomain)
+	logrus.Printf("GetRecordId(): subDomain: %v", subDomain)
 	defer func() {
 		logrus.Printf("Leave GetRecordId()")
 	}()
@@ -55,7 +55,7 @@ func (o *Operator) GetRecordId(subDomain string, pageSize string, pageNumber str
 		logrus.Printf(">>%v", types.ErrHttpStatusNotOK)
 		return "", "", types.ErrHttpStatusNotOK
 	}
-	logrus.Println(">>response Content: ", response.GetHttpContentString())
+	logrus.Println(">> Response Content: ", response.GetHttpContentString())
 	var res SubDomainRecordResponse
 	err = json.Unmarshal(response.GetHttpContentBytes(), &res)
 	if err != nil {
