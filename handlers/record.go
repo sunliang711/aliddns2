@@ -51,11 +51,12 @@ func UpdateRecord(c *gin.Context) {
 		logrus.Info(msg)
 		c.JSON(200, gin.H{"code": 0, "message": msg})
 	} else if err != nil {
-		msg := fmt.Sprintf("update error: %v", err)
+		msg := fmt.Sprintf("Update error: %v", err)
 		logrus.Info(msg)
 		c.JSON(200, gin.H{"code": 1, "message": msg})
 	} else {
-		logrus.Info("updated")
-		c.JSON(200, gin.H{"code": 0, "message": "updated"})
+		msg := fmt.Sprintf("Update %v.%v to %v", req.RR, req.Domain, req.NewIP)
+		logrus.Info(msg)
+		c.JSON(200, gin.H{"code": 0, "message": msg})
 	}
 }
