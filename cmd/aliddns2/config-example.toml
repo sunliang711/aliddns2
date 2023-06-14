@@ -6,6 +6,9 @@ regionID="cn-hangzhou"
 pageNumber="1"
 pageSize="100"
 
+defaultAccessKey = ""
+defaultAccessSecret = ""
+
 [local]
 enable=true
 updateInterval=60

@@ -2,3 +2,4 @@
 *.swp
 .idea/
 github.com/sunliang711/aliddns2.log
+config.toml
