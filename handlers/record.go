@@ -52,6 +52,9 @@ func UpdateRecord(c *gin.Context) {
 	rr := req.RR
 	domain := req.Domain
 	domainType := req.Type
+	if domainType == "" {
+		domainType = "A"
+	}
 	ttl := req.TTL
 	if ttl == "" {
 		ttl = "600"
@@ -80,7 +83,7 @@ func UpdateRecord(c *gin.Context) {
 		logrus.Info(msg)
 		c.JSON(200, gin.H{"code": 1, "message": msg})
 	} else {
-		msg := fmt.Sprintf("Update %v.%v to %v", req.RR, req.Domain, req.NewIP)
+		msg := fmt.Sprintf("Update %v.%v to %v", rr, domain, newIP)
 		logrus.Info(msg)
 		c.JSON(200, gin.H{"code": 0, "message": msg})
 	}
