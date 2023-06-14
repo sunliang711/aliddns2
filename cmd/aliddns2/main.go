@@ -7,14 +7,12 @@ import (
 	"github.com/spf13/viper"
 	"github.com/sunliang711/aliddns2/models"
 	"github.com/sunliang711/aliddns2/server"
-	"github.com/sunliang711/goutils/config"
+
+	"github.com/sunliang711/aliddns2/config"
 )
 
 func main() {
-	err := config.InitConfigLogger()
-	if err != nil {
-		panic(err)
-	}
+	config.Init()
 
 	if viper.GetBool("mysql.enable") {
 		dsn := viper.GetString("mysql.dsn")

@@ -3,12 +3,15 @@ package config
 import (
 	"io"
 	"os"
+	"strings"
 
-	"github.com/sunliang711/aliddns2/utils"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	"github.com/sunliang711/aliddns2/utils"
 )
+
+const AppName = "aliddns"
 
 func Init() {
 	configPath := pflag.StringP("config", "c", "config.toml", "config file")
@@ -21,6 +24,10 @@ func Init() {
 		logrus.Fatalf("Read config file: %v error: %v", *configPath, err)
 	}
 
+	viper.AutomaticEnv()
+	viper.SetEnvPrefix(AppName)
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
 	logrus.SetFormatter(&logrus.TextFormatter{FullTimestamp: viper.GetBool("log.showFullTime")})
 	if viper.GetBool("log.reportCaller") {
 		logrus.Info("Logrus: enable report caller")
@@ -30,17 +37,17 @@ func Init() {
 	logrus.Infoln("Log level: ", loglevel)
 	logrus.SetLevel(utils.LogLevel(loglevel))
 
-    var output io.Writer
+	var output io.Writer
 	logfilePath := viper.GetString("log.logfile")
-    if logfilePath != ""{
-        handler, err := os.OpenFile(logfilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
-        if err != nil {
-            logrus.Fatalf("Open logfile: %v error: %v", logfilePath, err)
-        }
-        logrus.Infof("Logfile path: %v", logfilePath)
-        output = handler
-    }else{
-        output = os.Stderr
-    }
+	if logfilePath != "" {
+		handler, err := os.OpenFile(logfilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+		if err != nil {
+			logrus.Fatalf("Open logfile: %v error: %v", logfilePath, err)
+		}
+		logrus.Infof("Logfile path: %v", logfilePath)
+		output = handler
+	} else {
+		output = os.Stderr
+	}
 	logrus.SetOutput(output)
 }

@@ -2,7 +2,8 @@ FROM golang:1.20-alpine as builder
 COPY . /tmp/myService
 ENV GO111MODULE=on
 ENV GOPROXY="https://goproxy.cn"
-RUN cd /tmp/myService/cmd/aliddns2 &&  go build -o aliddns2 main.go
+WORKDIR /tmp/myService/cmd/aliddns2
+RUN --mount=type=cache,target=/root/.cache/go-build go build -o aliddns2 main.go
 
 FROM alpine
 WORKDIR /usr/local/bin
