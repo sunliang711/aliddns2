@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -31,20 +32,44 @@ func UpdateRecord(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "bad request,invalid json"})
 		return
 	}
+	newIP := req.NewIP
+	if newIP == "" {
+		logrus.Infof("use client ip instead of request body")
+		newIP = c.ClientIP()
+	}
 
-	if req.NewIP == "" || req.RR == "" || req.Domain == "" || req.Type == "" || req.AccessKey == "" || req.AccessSecret == "" {
+	accessKey := req.AccessKey
+	if accessKey == "" {
+		logrus.Infof("use default access key")
+		accessKey = viper.GetString("server.defaultAccessKey")
+	}
+	accessSecret := req.AccessSecret
+	if accessSecret == "" {
+		logrus.Infof("use default access secret")
+		accessSecret = viper.GetString("server.defaultAccessSecret")
+	}
+
+	rr := req.RR
+	domain := req.Domain
+	domainType := req.Type
+	ttl := req.TTL
+	if ttl == "" {
+		ttl = "600"
+	}
+
+	if newIP == "" || rr == "" || domain == "" || domainType == "" || accessKey == "" || accessSecret == "" {
 		logrus.Warnf("some request field is empty")
-		c.JSON(200, gin.H{"message": types.ErrReqFieldEmpty, "format": "need new_ip,rr,domain,type,ttl,access_key,access_secret"})
+		c.JSON(200, gin.H{"message": types.ErrReqFieldEmpty, "format": "need new_ip(optional),rr,domain,type,ttl,access_key(use default when empty),access_secret(use default when empty)"})
 		return
 	}
 	regionID := viper.GetString("server.regionID")
-	recordOperator, err := recordOperation.NewOperator(regionID, req.AccessKey, req.AccessSecret, "", "")
+	recordOperator, err := recordOperation.NewOperator(regionID, accessKey, accessSecret, "", "")
 	if err != nil {
 		logrus.Infof("NewOperator error: %v", err)
 		c.JSON(200, gin.H{"message": fmt.Sprintf("Internal error: %v", err)})
 		return
 	}
-	err = recordOperator.DoUpdate(req.NewIP, req.RR, req.Domain, req.Type, req.TTL)
+	err = recordOperator.DoUpdate(newIP, rr, domain, domainType, ttl)
 
 	if err == types.ErrNotNeedUpdate {
 		msg := fmt.Sprintf("%v", err)

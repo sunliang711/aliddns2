@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  ordinal_parser:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      # server
+      # ORDINALPARSER_SERVER_ADDR: ":8080"
+
