@@ -6,6 +6,8 @@ regionID="cn-hangzhou"
 pageNumber="1"
 pageSize="100"
 
+accessKeys = "gitez.cc:<ACCESS_KEY>:<ACCESS_SECRET>;example.com:<ACCESS_KEY>:<ACCESS_SECRET>;"
+
 defaultAccessKey = ""
 defaultAccessSecret = ""
 
