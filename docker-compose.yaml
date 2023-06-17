@@ -3,7 +3,7 @@ services:
   aliddns2:
     build: .
     ports:
-      - "6080:8080"
+      - "3000:3000"
     environment:
       ALIDDNS_LOG_LEVEL: info
     volumes:
