@@ -8,4 +8,10 @@ services:
       ALIDDNS_LOG_LEVEL: info
     volumes:
       - ./cmd/aliddns2/config.toml:/usr/local/bin/config.toml
+    networks:
+      - eagle
 
+networks:
+  eagle:
+    name: eagle
+    external: true
